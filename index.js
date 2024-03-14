@@ -1,20 +1,23 @@
-const loadApiData = async () => {
+const loadApiData = async (isSeeMore) => {
     const url = "https://openapi.programming-hero.com/api/ai/tools"
     const response = await fetch(url);
     const data = await response.json();
     const jasonData = data.data.tools;
-    showApiData(jasonData);
+    showApiData(jasonData, isSeeMore);
 }
-const showApiData = (loopData) => {
+const showApiData = (loopData, isSeeMore) => {
     const cardContainer = document.getElementById("card-conatiner");
+    cardContainer.innerHTML = ""
     const seeMoreButton = document.getElementById("see-more-button");
-    if(loopData.length > 6){
+    if(loopData.length > 6 && !isSeeMore){
         seeMoreButton.classList.remove("hidden");
     }
     else{
         seeMoreButton.classList.add("hidden");
     }
-    loopData = loopData.slice(0, 6);
+    if (!isSeeMore){
+        loopData = loopData.slice(0, 6);
+    }
 
     loopData.forEach(singleData => {
 
@@ -116,13 +119,16 @@ const showWithModal = detail => {
         <div class="mt-3 lg:mt-6">
             <h1 class="text-black text-xl lg:text-[25px] font-semibold leading-4 lg:leading-[35px] mb-2 lg:mb-4"> ${detail.input_output_examples
 [0].input}</h1>
-            <p class="text-[#585858] leading-4 lg:leading-[26px]">I'm doing well, thank you for
-                asking. How can I
-                assist you today?</p>
+            <p class="text-[#585858] leading-4 lg:leading-[26px]">${detail.input_output_examples
+                [0].output}</p>
         </div>
     </div>
 
 </div>
     `
+}
+
+const handleSeeMore = () => {
+    loadApiData(true)
 }
 loadApiData()
